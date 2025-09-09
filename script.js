@@ -2,6 +2,8 @@ const categoryContainer = document.getElementById('category-container');
 const treeContainer = document.getElementById('tree-container');
 const cartContainer = document.getElementById('cart-container');
 let totalPrice = document.getElementById('total-price').innerText;
+const myModal = document.getElementById('my-modal');
+const modalContainer = document.getElementById('modal-container');
 
 
 const loadCategoryData = () => {
@@ -17,13 +19,12 @@ const loadCategoryData = () => {
     });
 };
 
-
-
 const showCategoryData =(categories) => {
  categories.forEach(category => {
   categoryContainer.innerHTML +=`<li id="${category.id}"class="font-semibold bg-white text-black hover:bg-[#15803D] w-full hover:text-white mb-2 p-2 rounded">${category.category_name} </li>`
  });
 }
+
 
 
 
@@ -34,6 +35,7 @@ categoryContainer.addEventListener('click', (e)=>{
   })
   if(e.target.localName === 'li'){
     // console.log(e.target)
+    showLoading()
   e.target.classList.remove("bg-white");
   e.target.classList.add("bg-green-700", "text-white");
     loadTreeCategory(e.target.id)
@@ -42,7 +44,10 @@ categoryContainer.addEventListener('click', (e)=>{
 const loadTreeCategory = (categoryId) => {
   fetch(`https://openapi.programming-hero.com/api/category/${categoryId}`)
   .then(res => res.json())
-  .then(data => showTreeByCategory(data.plants))
+  .then(data => {
+    showTreeByCategory(data.plants);
+   
+  } )
 }
 
  
@@ -53,7 +58,7 @@ treeArr.forEach(tree => {
   // console.log(tree)
   treeContainer.innerHTML +=`<div class="card bg-base-100 items-center w-full shadow-sm">
             <figure class="px-10 pt-10">
-              <img class="max-h-[250px] cover rounded-md" src="${tree.image}" alt="Shoes" />
+              <img class="max-h-[250px] w-full cover rounded-md" src="${tree.image}" alt="Shoes" />
             </figure>
             <div class=" px-10 pt-10 space-y-5">
               <h2 id="${tree.id} " class="card-title">${tree.name}</h2>
@@ -62,8 +67,9 @@ treeArr.forEach(tree => {
                 <p>${tree.category}</p>
                 <p><i class="fa-solid fa-bangladeshi-taka-sign"></i>${tree.price} </p>
               </div>
-              <div class="card-actions">
-                <button class="btn bg-green-700 w-full rounded-3xl text-white mb-[20px]">Add to Cart</button>
+              <div class="card-actions flex gap-4">
+                <button class="btn bg-green-700  rounded-3xl text-white mb-[20px]">Add to Cart</button>
+                 <button class="btn bg-green-200 hover:bg-green-700 hover:text-white rounded-3xl text-gray-400 mb-[20px]">Show Details</button>
               </div>
             </div>
           </div>`
@@ -75,7 +81,7 @@ treeArr.forEach(tree => {
     .then(res => res.json())
     .then(data => {
       const allTrees = data.plants;
-      showTreeByCategory(allTrees)
+      showTreeByCategory(allTrees);
       
     })
     .catch(err => {
@@ -89,8 +95,12 @@ treeContainer.addEventListener('click', (e) => {
   showMyCart(myCart)
   currentTotal(myCart)
   removeCartElement(myCart)
-
+  
 })
+
+
+
+
 
 const handleCart = (e) =>{
 if(e.target.innerText === 'Add to Cart'){
@@ -105,6 +115,46 @@ if(e.target.innerText === 'Add to Cart'){
     id: id
   });
 }
+
+// -----------------------working-----------------
+
+
+if(e.target.innerText === 'Show Details'){
+  handleViewDetails(e)
+}
+}
+
+const handleViewDetails =(e) => {
+   const id = e.target.parentNode.parentNode.children[0].id;
+   fetch(`https://openapi.programming-hero.com/api/plant/${id}`)
+   .then(res => res.json())
+   .then(data => {
+    displayDetail(data.plants)
+    console.log(data.plants)
+   } )
+}
+const displayDetail = (plants) => {
+ myModal.showModal(plants)
+ modalContainer.innerHTML = `<div class="card bg-base-100 ">
+  <figure class="px-10 pt-10">
+    <img class="w-full max-h-[400px]"
+      src=${plants.image}
+      alt="Shoes"
+      class="rounded-xl" />
+  </figure>
+  <div class="p-8 space-y-2">
+    <h2 class="card-title">${plants.name}</h2>
+    <p>${plants.description}</p>
+    <div class="flex justify-between items-center">
+      <p class="" >${plants.category}</p>
+      <p class="">${plants.price}</p>
+    </div>
+    <div class="card-actions">
+      <button class="btn w-full bg-green-700 rounded-3xl text-white font-bold text-sm">Add to Cart</button>
+    </div>
+  </div>
+</div>
+ `
 }
 
 const showMyCart = (myCart) => {
@@ -143,6 +193,9 @@ cartContainer.addEventListener('click', (e) => {
   }
 });
 
+const showLoading = () =>{
+  treeContainer.innerHTML = `<h2 class="text-gray-500 text-4xl t"> Loading...<span class="loading loading-bars loading-xl"></span></h2>`
+}
 loadAllTrees()
  loadCategoryData()
 
