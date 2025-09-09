@@ -15,7 +15,7 @@ map():Returns a array. forEach() does not return anything but undefined and filt
 answer 3:
 Arrow function is short, concise version of functions. Best works in callBack function.
 
-answer-4:
+answer 4:
 Destructuring in ES6 is a syntax feature that allows you to extract values from data structures—such as arrays or objects—and assign them 
 to individual variables in a concise and declarative way.It simplifies the process of unpacking values,
 making code more readable and reducing the need for multiple lines of property or index access.
@@ -35,7 +35,7 @@ console.log(id); // 42
 console.log(name); // 'John Doe'
 console.log(email); // 'john@example.com'
 
-answer-5:
+answer 5:
 Template literals in ES6 are a new way to work with strings that make it easier to embed expressions, create multi-line strings, and improve readability.
 They are enclosed by backticks (`) instead of quotes, unlike traditional strings.
 
