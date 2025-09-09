@@ -1,7 +1,7 @@
 answer 1:
 
 Var is Function-scoped. If declared outside of a function, it becomes globally scoped.
-Variables declared with var are hoisted to the top and initialized with undefined.
+Variables declared with var are always hoisted to the top and initialized with undefined.
 It Can be reassigned and redeclared within the same scope.
 
 let is block-scoped. Variables are hoisted but not initialized, leading to a "temporal dead zone" until the declaration is processed.
